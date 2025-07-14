@@ -1,0 +1,38 @@
+package org.mryrt.web.Auth.Controller;
+
+import jakarta.validation.Valid;
+import org.mryrt.web.Auth.Model.LogInRequest;
+import org.mryrt.web.Auth.Model.SignUpRequest;
+import org.mryrt.web.Auth.Model.UserDTO;
+import org.mryrt.web.Auth.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("api/auth")
+@CrossOrigin
+public class UserController {
+
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/sign-up")
+    public ResponseEntity userSignUp(@Valid @RequestBody SignUpRequest signUpRequest) {
+        UserDTO userDTO = userService.userSignUp(signUpRequest);
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping("/log-in")
+    public ResponseEntity<String> userLogIn(@Valid @RequestBody LogInRequest logInRequest) {
+        String userToken  = userService.userLogIn(logInRequest);
+        return ResponseEntity.ok(userToken);
+    }
+
+    @GetMapping
+    public ResponseEntity userCurrent() {
+        UserDTO userDTO = userService.userGetMe();
+        return ResponseEntity.ok().body(userDTO);
+    }
+    
+}
